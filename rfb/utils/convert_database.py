@@ -4,15 +4,13 @@
 #                                                                               |
 # ------------------------------------------------------------------------------#
 
-from asyncio.log import logger
-from sqlite3 import IntegrityError
 import click
 from rfb import settings
 
 from typing import Optional
 from logging import getLogger
 
-from sqlalchemy import create_engine, insert, null
+from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 
@@ -76,6 +74,8 @@ class ConvertDatabase:
         }
 
         self.engine = create_engine(**engine_kwargs)
+        # insp = reflection.Inspector.from_engine(self.engine)
+        # print(insp.get_table_names())
         self.directory = directory
         self.session = sessionmaker(bind=self.engine)()
 
@@ -83,17 +83,18 @@ class ConvertDatabase:
         """
         Cria as tabelas da bases de dados
         """
-        Empresa().metadata.create_all(self.engine)
-        Estabelecimento().metadata.create_all(self.engine)
-        DadoSimples().metadata.create_all(self.engine)
-        Socio().metadata.create_all(self.engine)
-        Cnae().metadata.create_all(self.engine)
+
         Pais().metadata.create_all(self.engine)
+        Cnae().metadata.create_all(self.engine)
         Municipio().metadata.create_all(self.engine)
         Qualificacao().metadata.create_all(self.engine)
         Natureza().metadata.create_all(self.engine)
         MotivoCadastral().metadata.create_all(self.engine)
         Cidade().metadata.create_all(self.engine)
+        Empresa().metadata.create_all(self.engine)
+        Estabelecimento().metadata.create_all(self.engine)
+        DadoSimples().metadata.create_all(self.engine)
+        Socio().metadata.create_all(self.engine)
 
     def parse_empresa(self, row: list) -> dict:
         """ Faz o parse e tratamento da linha do arquivo em um dict compativo com models.Empresa """
@@ -284,39 +285,21 @@ class ConvertDatabase:
         log.info(info)
         click.echo(info, nl=True)
 
-    def _filter(self, arr):
-        cache = []
-        j = 0
-        for item in arr:
-            if len(cache) == 0:
-                cache.append(item)
-                pass
-            else:
-                for i, itemcache in enumerate(cache):
-                    if itemcache['cnpj'] == item['cnpj']:
-                        if len(str(item)) > len(str(itemcache)):
-                            del cache[i]
-                            cache.append(item)
-                        j = 1
-                if j == 0:
-                    cache.append(item)
-        return list(cache)
-
     def _commit(self, model: DeclarativeMeta, rows_cache: list):
-        try:
-            self.session.bulk_insert_mappings(model, rows_cache)
-            self.session.commit()
-        except:
-            print("bulk inserting rows failed, fallback to one by one")
-            rows = rows_cache
-            for item in rows:
-                try:
-                    self.session.execute(insert(model).values(**item))
-                    self.session.commit()
-                except:
-                    print("Error inserting item: %s", item)
-                    self.session.rollback()
-                    pass
+        #try:
+        self.session.bulk_insert_mappings(model, rows_cache)
+        self.session.commit()
+        # except:
+        #     print("bulk inserting rows failed, fallback to one by one")
+        #     rows = rows_cache
+        #     for item in rows:
+        #         try:
+        #             self.session.execute(insert(model).values(**item))
+        #             self.session.commit()
+        #         except:
+        #             print("Error inserting item: %s", item)
+        #             self.session.rollback()
+        #             pass
 
     def _execute(self, file: PurePath, populate_name: str,
                  columns: int, model: DeclarativeMeta,

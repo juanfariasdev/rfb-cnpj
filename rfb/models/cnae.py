@@ -11,7 +11,7 @@ class Cnae(Base):
     __tablename__ = 'cnaes'
 
     # CÓDIGO DA ATIVIDADE ECONÔMICA
-    codigo = Column(String, primary_key=True, index=True)
+    codigo = Column(String, primary_key=True)
 
     # NOME DA ATIVIDADE ECONÔMICA
-    descricao = Column(String, index=True)
+    descricao = Column(String)

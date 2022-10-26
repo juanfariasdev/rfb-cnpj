@@ -1,7 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, ForeignKey, String, Date, Integer
-
-from rfb.models.empresa import Empresa
+from sqlalchemy import Column, String, Date, Integer
 
 Base = declarative_base()
 
@@ -12,17 +10,16 @@ class DadoSimples(Base):
     """
     __tablename__ = 'dados_simples'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
 
     # NÚMERO BASE DE INSCRIÇÃO NO CNPJ (OITO PRIMEIROS
     # DÍGITOS DO CNPJ).
-    cnpj = Column(String(length=8),ForeignKey(Empresa.cnpj), index=True)
-
+    cnpj = Column(String(length=8))
     # INDICADOR DA EXISTÊNCIA DA OPÇÃO PELO SIMPLES.
     #  S - SIM
     #  N - NÃO
     #  EM BRANCO – OUTROS
-    opcao_simples = Column(String(length=1), index=True)
+    opcao_simples = Column(String(length=1))
 
     # DATA DE OPÇÃO PELO SIMPLES
     data_opcao_simples = Column(Date)
@@ -34,7 +31,7 @@ class DadoSimples(Base):
     #  S - SIM
     #  N - NÃO
     #  EM BRANCO - OUTROS
-    opcao_mei = Column(String(length=1), index=True)
+    opcao_mei = Column(String(length=1))
 
     # DATA DE OPÇÃO PELO MEI
     data_opcao_mei = Column(Date)

@@ -8,7 +8,7 @@ class Natureza(Base):
     __tablename__ = 'naturezas'
 
     # CÓDIGO DA NATUREZA JURÍDICA
-    codigo = Column(Integer, primary_key=True, index=True)
+    codigo = Column(Integer, primary_key=True)
 
     # NOME DA NATUREZA JURÍDICA
-    descricao = Column(String, index=True)
+    descricao = Column(String)

@@ -8,7 +8,7 @@ class MotivoCadastral(Base):
     __tablename__ = 'motivo_cadastral'
 
     # CÓDIGO DO MOTIVO CADASTRAL
-    codigo = Column(Integer, primary_key=True, index=True)
+    codigo = Column(Integer, primary_key=True)
 
     # NOME DO MOTIVO CADASTRAL
-    descricao = Column(String, index=True)
+    descricao = Column(String)

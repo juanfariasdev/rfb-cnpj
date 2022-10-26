@@ -41,6 +41,9 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+bancos/
+bancos/*
+download2
 MANIFEST
 
 # PyInstaller
