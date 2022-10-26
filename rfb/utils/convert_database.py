@@ -286,20 +286,20 @@ class ConvertDatabase:
         click.echo(info, nl=True)
 
     def _commit(self, model: DeclarativeMeta, rows_cache: list):
-        #try:
-        self.session.bulk_insert_mappings(model, rows_cache)
-        self.session.commit()
-        # except:
-        #     print("bulk inserting rows failed, fallback to one by one")
-        #     rows = rows_cache
-        #     for item in rows:
-        #         try:
-        #             self.session.execute(insert(model).values(**item))
-        #             self.session.commit()
-        #         except:
-        #             print("Error inserting item: %s", item)
-        #             self.session.rollback()
-        #             pass
+        try:
+            self.session.bulk_insert_mappings(model, rows_cache)
+            self.session.commit()
+        except:
+            print("Erro ao inserir o bulk, inserindo linha a linha")
+            rows = rows_cache
+            for item in rows:
+                try:
+                    self.session.execute(insert(model).values(**item))
+                    self.session.commit()
+                except:
+                    print("Error ao inserir a linha: %s", item)
+                    self.session.rollback()
+                    pass
 
     def _execute(self, file: PurePath, populate_name: str,
                  columns: int, model: DeclarativeMeta,
